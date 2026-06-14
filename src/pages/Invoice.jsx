@@ -50,8 +50,8 @@ export default function Invoice() {
 
   // Fungsi untuk menentukan status invoice
   const getInvoiceStatus = (item) => {
-    // Cek apakah invoice sudah lunas (jika status berisi nominal/Rp)
-    if (item.status?.includes("Rp") || item.status?.match(/\d+/)) {
+    // Cek apakah invoice sudah lunas (jika nominal terisi)
+    if (item.nominal && item.nominal.trim()) {
       return "lunas";
     }
     // Cek apakah invoice jatuh tempo (berdasarkan tanggal tempo)
@@ -82,9 +82,14 @@ export default function Invoice() {
 
   const stats = {
     total: invoiceData.length,
-    belumLunas: invoiceData.filter((inv) => getInvoiceStatus(inv) === "belumLunas").length,
-    lunas: invoiceData.filter((inv) => getInvoiceStatus(inv) === "lunas").length,
-    jatuhTempo: invoiceData.filter((inv) => getInvoiceStatus(inv) === "jatuhTempo").length,
+    belumLunas: invoiceData.filter(
+      (inv) => getInvoiceStatus(inv) === "belumLunas",
+    ).length,
+    lunas: invoiceData.filter((inv) => getInvoiceStatus(inv) === "lunas")
+      .length,
+    jatuhTempo: invoiceData.filter(
+      (inv) => getInvoiceStatus(inv) === "jatuhTempo",
+    ).length,
   };
 
   return (
@@ -232,7 +237,7 @@ export default function Invoice() {
                     <td className="py-4 px-6 text-gray-300">{item.tanggal}</td>
                     <td className="py-4 px-6 text-gray-300">{item.tempo}</td>
                     <td className="py-4 px-6 text-gray-300 font-medium">
-                      {item.status}
+                      {item.nominal || "-"}
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex items-center justify-center gap-2">
