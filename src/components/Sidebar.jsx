@@ -37,7 +37,7 @@ export default function Sidebar() {
         <div className="bg-red-600 text-white px-4 py-2 rounded font-bold text-lg">
           EMMA
         </div>
-        <p className="text-gray-400 text-xs mt-2">CV Eminems Utama</p>
+        <p className="text-gray-400 text-xs mt-2">CV Emmera Utama</p>
       </div>
 
       {/* Menu Items */}

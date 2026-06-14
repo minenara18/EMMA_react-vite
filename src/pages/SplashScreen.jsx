@@ -7,7 +7,9 @@ export default function SplashScreen({ onComplete }) {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-b from-[#0f1419] via-[#1a2332] to-[#0f1419] overflow-hidden animate-fadeIn">
+    <div className="flex items-center justify-center h-screen 
+    bg-gradient-to-b from-[#0f1419] via-[#1a2332] to-[#0f1419] 
+    overflow-hidden animate-fadeIn">
       <div className="text-center px-6">
         {/* Kapal SVG Logo */}
         <div className="mb-12 flex justify-center">

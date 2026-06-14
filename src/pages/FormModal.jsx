@@ -26,7 +26,8 @@ export default function FormModal({
             layanan: "",
             tanggal: today,
             tempo: "",
-            keterangan: "",
+            nominal: "",
+            status: "",
           }),
   );
 
@@ -44,6 +45,7 @@ export default function FormModal({
       if (!formData.biaya.trim()) newErrors.biaya = "Biaya harus diisi";
     } else {
       if (!formData.tempo.trim()) newErrors.tempo = "Jatuh tempo harus diisi";
+      if (!formData.nominal.trim()) newErrors.nominal = "Nominal harus diisi";
     }
 
     return newErrors;
@@ -294,11 +296,10 @@ export default function FormModal({
                     Jatuh Tempo *
                   </label>
                   <input
-                    type="text"
+                    type="date"
                     name="tempo"
                     value={formData.tempo}
                     onChange={handleChange}
-                    placeholder="10 hari"
                     className={`w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border ${
                       errors.tempo ? "border-red-500" : "border-gray-600"
                     } focus:border-red-600 focus:outline-none transition`}
@@ -309,17 +310,41 @@ export default function FormModal({
                 </div>
               </div>
 
-              {/* Keterangan */}
+              {/* Nominal */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Keterangan
+                  Nominal *
                 </label>
-                <textarea
-                  name="keterangan"
-                  value={formData.keterangan}
+                <input
+                  type="text"
+                  name="nominal"
+                  value={formData.nominal}
                   onChange={handleChange}
-                  rows="2"
-                  className="w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border border-gray-600 focus:border-red-600 focus:outline-none transition resize-none"
+                  placeholder="Rp 12.500.0"
+                  className={`w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border ${
+                    errors.nominal ? "border-red-500" : "border-gray-600"
+                  } focus:border-red-600 focus:outline-none transition`}
+                />
+                {errors.nominal && (
+                  <p className="text-red-400 text-xs mt-1">{errors.nominal}</p>
+                )}
+                <p className="text-gray-500 text-xs mt-1">
+                  Contoh: Rp 12.500.0
+                </p>
+              </div>
+
+              {/* Status Pembayaran */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Status Pembayaran
+                </label>
+                <input
+                  type="text"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  placeholder="Opsional - catatan status pembayaran"
+                  className="w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border border-gray-600 focus:border-red-600 focus:outline-none transition"
                 />
               </div>
             </>

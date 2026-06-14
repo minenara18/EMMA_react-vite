@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Plus } from "lucide-react";
 
 export default function SuratModal({ title, initialData, onSubmit, onClose }) {
   const today = new Date().toISOString().split("T")[0];
@@ -15,6 +15,15 @@ export default function SuratModal({ title, initialData, onSubmit, onClose }) {
   );
 
   const [errors, setErrors] = useState({});
+  const [tujuanOptions, setTujuanOptions] = useState([
+    "PT. Nusantara Shipping",
+    "PT. Maju Maritim",
+    "PT. Samudra Lines",
+    "PT. Armada Samudra",
+    "CV. Nailavi Mandiri",
+  ]);
+  const [showAddTujuan, setShowAddTujuan] = useState(false);
+  const [newTujuan, setNewTujuan] = useState("");
 
   const jenisOptions = [
     "Permohonan Harga",
@@ -30,14 +39,6 @@ export default function SuratModal({ title, initialData, onSubmit, onClose }) {
     "Terkirim",
     "Selesai",
     "Mengirim",
-  ];
-
-  const tujuanOptions = [
-    "PT. Nusantara Shipping",
-    "PT. Maju Maritim",
-    "PT. Samudra Lines",
-    "PT. Armada Samudra",
-    "CV. Nailavi Mandiri",
   ];
 
   const validateForm = () => {
@@ -66,6 +67,27 @@ export default function SuratModal({ title, initialData, onSubmit, onClose }) {
     }
   };
 
+  const handleAddTujuan = () => {
+    if (newTujuan.trim() && !tujuanOptions.includes(newTujuan.trim())) {
+      const addedTujuan = newTujuan.trim();
+      setTujuanOptions([...tujuanOptions, addedTujuan]);
+      setFormData((prev) => ({
+        ...prev,
+        tujuan: addedTujuan,
+      }));
+      setNewTujuan("");
+      setShowAddTujuan(false);
+      // Clear error jika ada
+      if (errors.tujuan) {
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors.tujuan;
+          return newErrors;
+        });
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validateForm();
@@ -89,7 +111,7 @@ export default function SuratModal({ title, initialData, onSubmit, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-800 rounded-lg border border-gray-700 max-w-md w-full max-h-96 overflow-y-auto">
+      <div className="bg-gray-800 rounded-lg border border-gray-700 max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-700 sticky top-0 bg-gray-800">
           <h2 className="text-lg font-semibold text-white">{title}</h2>
@@ -132,23 +154,66 @@ export default function SuratModal({ title, initialData, onSubmit, onClose }) {
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Tujuan Surat *
             </label>
-            <select
-              name="tujuan"
-              value={formData.tujuan}
-              onChange={handleChange}
-              className={`w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border ${
-                errors.tujuan ? "border-red-500" : "border-gray-600"
-              } focus:border-red-600 focus:outline-none transition`}
-            >
-              <option value="">-- Pilih Tujuan --</option>
-              {tujuanOptions.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-            {errors.tujuan && (
-              <p className="text-red-400 text-xs mt-1">{errors.tujuan}</p>
+            {!showAddTujuan ? (
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <select
+                    name="tujuan"
+                    value={formData.tujuan}
+                    onChange={handleChange}
+                    className={`flex-1 bg-gray-700 text-gray-100 px-3 py-2 rounded border ${
+                      errors.tujuan ? "border-red-500" : "border-gray-600"
+                    } focus:border-red-600 focus:outline-none transition`}
+                  >
+                    <option value="">-- Pilih Tujuan --</option>
+                    {tujuanOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddTujuan(true)}
+                    className="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                    title="Tambah PT./CV. baru"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+                {errors.tujuan && (
+                  <p className="text-red-400 text-xs">{errors.tujuan}</p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={newTujuan}
+                  onChange={(e) => setNewTujuan(e.target.value)}
+                  placeholder="Contoh: PT. Baru Jaya"
+                  className="w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border border-gray-600 focus:border-red-600 focus:outline-none transition"
+                />
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={handleAddTujuan}
+                    className="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm font-medium"
+                  >
+                    Simpan
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddTujuan(false);
+                      setNewTujuan("");
+                    }}
+                    className="flex-1 px-3 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 transition text-sm font-medium"
+                  >
+                    Batal
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 

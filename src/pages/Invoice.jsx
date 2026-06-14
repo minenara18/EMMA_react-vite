@@ -9,6 +9,8 @@ export default function Invoice() {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("semua");
 
   const handleAdd = () => {
     setEditingId(null);
@@ -46,10 +48,48 @@ export default function Invoice() {
     }
   };
 
+  // Fungsi untuk menentukan status invoice
+  const getInvoiceStatus = (item) => {
+    // Cek apakah invoice sudah lunas (jika nominal terisi)
+    if (item.nominal && item.nominal.trim()) {
+      return "lunas";
+    }
+    // Cek apakah invoice jatuh tempo (berdasarkan tanggal tempo)
+    if (item.tempo) {
+      const tempoDate = new Date(item.tempo);
+      const today = new Date();
+      if (tempoDate < today) {
+        return "jatuhTempo";
+      }
+    }
+    return "belumLunas";
+  };
+
+  // Filter data berdasarkan search dan status
+  const filteredData = invoiceData.filter((item) => {
+    const matchesSearch =
+      item.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.perusahaan?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.layanan?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (filterStatus === "semua") {
+      return matchesSearch;
+    }
+
+    const itemStatus = getInvoiceStatus(item);
+    return matchesSearch && itemStatus === filterStatus;
+  });
+
   const stats = {
     total: invoiceData.length,
-    belumLunas: invoiceData.filter((inv) => !inv.status?.includes("Rp")).length,
-    lunas: invoiceData.filter((inv) => inv.status?.includes("Rp")).length,
+    belumLunas: invoiceData.filter(
+      (inv) => getInvoiceStatus(inv) === "belumLunas",
+    ).length,
+    lunas: invoiceData.filter((inv) => getInvoiceStatus(inv) === "lunas")
+      .length,
+    jatuhTempo: invoiceData.filter(
+      (inv) => getInvoiceStatus(inv) === "jatuhTempo",
+    ).length,
   };
 
   return (
@@ -93,8 +133,10 @@ export default function Invoice() {
           </p>
         </div>
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <p className="text-gray-400 text-sm">Total Invoice</p>
-          <p className="text-3xl font-bold text-blue-500 mt-2">{stats.total}</p>
+          <p className="text-gray-400 text-sm">Jatuh Tempo</p>
+          <p className="text-3xl font-bold text-yellow-500 mt-2">
+            {stats.jatuhTempo}
+          </p>
         </div>
       </div>
 
@@ -103,20 +145,50 @@ export default function Invoice() {
         <div className="flex-1 max-w-sm relative">
           <input
             type="text"
-            placeholder="Cari..."
+            placeholder="Cari invoice, perusahaan, atau layanan..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-gray-800 text-gray-100 px-4 py-2 rounded-lg border border-gray-700 focus:border-red-600 focus:outline-none transition"
           />
         </div>
-        <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium">
+        <button
+          onClick={() => setFilterStatus("semua")}
+          className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+            filterStatus === "semua"
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+        >
           Semua
         </button>
-        <button className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition text-sm">
+        <button
+          onClick={() => setFilterStatus("belumLunas")}
+          className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+            filterStatus === "belumLunas"
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+        >
           Belum lunas
         </button>
-        <button className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition text-sm">
+        <button
+          onClick={() => setFilterStatus("lunas")}
+          className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+            filterStatus === "lunas"
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+        >
           Lunas
         </button>
-        <button className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition text-sm">
+        <button
+          onClick={() => setFilterStatus("jatuhTempo")}
+          className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+            filterStatus === "jatuhTempo"
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+        >
           Jatuh tempo
         </button>
       </div>
@@ -151,8 +223,8 @@ export default function Invoice() {
               </tr>
             </thead>
             <tbody>
-              {invoiceData.length > 0 ? (
-                invoiceData.map((item) => (
+              {filteredData.length > 0 ? (
+                filteredData.map((item) => (
                   <tr
                     key={item.id}
                     className="border-b border-gray-700 hover:bg-gray-700/50 transition"
@@ -167,7 +239,7 @@ export default function Invoice() {
                     <td className="py-4 px-6 text-gray-300">{item.tanggal}</td>
                     <td className="py-4 px-6 text-gray-300">{item.tempo}</td>
                     <td className="py-4 px-6 text-gray-300 font-medium">
-                      {item.status}
+                      {item.nominal || "-"}
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex items-center justify-center gap-2">
@@ -201,8 +273,9 @@ export default function Invoice() {
                     colSpan="7"
                     className="py-8 px-6 text-center text-gray-400"
                   >
-                    Tidak ada data invoice. Klik tombol "Buat Invoice" untuk
-                    menambah invoice baru.
+                    {searchQuery || filterStatus !== "semua"
+                      ? "Tidak ada data invoice yang sesuai dengan pencarian atau filter."
+                      : "Tidak ada data invoice. Klik tombol 'Buat Invoice' untuk menambah invoice baru."}
                   </td>
                 </tr>
               )}

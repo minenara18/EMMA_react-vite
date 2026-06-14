@@ -9,6 +9,8 @@ export default function SuratKeluar() {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("semua");
 
   const handleAdd = () => {
     setEditingId(null);
@@ -63,6 +65,28 @@ export default function SuratKeluar() {
     return icons[jenis] || "📄";
   };
 
+  // Filter data berdasarkan search dan status
+  const filteredData = suratData.filter((item) => {
+    const matchesSearch =
+      item.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.jenis?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.tujuan?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.perihal?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (filterStatus === "semua") {
+      return matchesSearch;
+    }
+
+    return matchesSearch && item.status === filterStatus;
+  });
+
+  const stats = {
+    total: suratData.length,
+    draft: suratData.filter((s) => s.status === "Draft").length,
+    terkirim: suratData.filter((s) => s.status === "Terkirim").length,
+    selesai: suratData.filter((s) => s.status === "Selesai").length,
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -70,7 +94,7 @@ export default function SuratKeluar() {
         <div>
           <h1 className="text-3xl font-bold text-white">Surat Keluar</h1>
           <p className="text-gray-400 text-sm mt-1">
-            Kelola semua dokumen surat keluar - Total: {suratData.length} surat
+            Kelola semua dokumen surat keluar - Total: {stats.total} surat
           </p>
         </div>
         <button
@@ -83,39 +107,30 @@ export default function SuratKeluar() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center hover:border-red-600 transition">
-          <p className="text-gray-400 text-sm">Permohonan</p>
-          <p className="text-3xl font-bold text-red-500 mt-2">
-            {suratData.filter((s) => s.jenis === "Permohonan Harga").length}
-          </p>
+          <p className="text-gray-400 text-sm">Total Surat</p>
+          <p className="text-3xl font-bold text-red-500 mt-2">{stats.total}</p>
           <p className="text-gray-500 text-xs mt-1">surat</p>
         </div>
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center hover:border-yellow-600 transition">
-          <p className="text-gray-400 text-sm">Surat Tanda</p>
+          <p className="text-gray-400 text-sm">Draft</p>
           <p className="text-3xl font-bold text-yellow-500 mt-2">
-            {suratData.filter((s) => s.jenis === "Surat Tanda Terima").length}
-          </p>
-          <p className="text-gray-500 text-xs mt-1">surat</p>
-        </div>
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center hover:border-green-600 transition">
-          <p className="text-gray-400 text-sm">Delivery Order</p>
-          <p className="text-3xl font-bold text-green-500 mt-2">
-            {suratData.filter((s) => s.jenis === "Delivery Order").length}
+            {stats.draft}
           </p>
           <p className="text-gray-500 text-xs mt-1">surat</p>
         </div>
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center hover:border-blue-600 transition">
-          <p className="text-gray-400 text-sm">Berita Acara</p>
+          <p className="text-gray-400 text-sm">Terkirim</p>
           <p className="text-3xl font-bold text-blue-500 mt-2">
-            {suratData.filter((s) => s.jenis === "Berita Acara").length}
+            {stats.terkirim}
           </p>
           <p className="text-gray-500 text-xs mt-1">surat</p>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center hover:border-purple-600 transition">
-          <p className="text-gray-400 text-sm">Dokumentasi</p>
-          <p className="text-3xl font-bold text-purple-500 mt-2">
-            {suratData.filter((s) => s.jenis === "Purchase Request").length}
+        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center hover:border-green-600 transition">
+          <p className="text-gray-400 text-sm">Selesai</p>
+          <p className="text-3xl font-bold text-green-500 mt-2">
+            {stats.selesai}
           </p>
           <p className="text-gray-500 text-xs mt-1">surat</p>
         </div>
@@ -126,20 +141,50 @@ export default function SuratKeluar() {
         <div className="flex-1 max-w-sm relative">
           <input
             type="text"
-            placeholder="Cari surat..."
+            placeholder="Cari surat, tujuan, atau perihal..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-gray-800 text-gray-100 px-4 py-2 rounded-lg border border-gray-700 focus:border-red-600 focus:outline-none transition"
           />
         </div>
-        <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium">
+        <button
+          onClick={() => setFilterStatus("semua")}
+          className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+            filterStatus === "semua"
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+        >
           Semua
         </button>
-        <button className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition text-sm">
+        <button
+          onClick={() => setFilterStatus("Draft")}
+          className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+            filterStatus === "Draft"
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+        >
           Draft
         </button>
-        <button className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition text-sm">
+        <button
+          onClick={() => setFilterStatus("Terkirim")}
+          className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+            filterStatus === "Terkirim"
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+        >
           Terkirim
         </button>
-        <button className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition text-sm">
+        <button
+          onClick={() => setFilterStatus("Selesai")}
+          className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+            filterStatus === "Selesai"
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+        >
           Selesai
         </button>
       </div>
@@ -174,8 +219,8 @@ export default function SuratKeluar() {
               </tr>
             </thead>
             <tbody>
-              {suratData.length > 0 ? (
-                suratData.map((item) => (
+              {filteredData.length > 0 ? (
+                filteredData.map((item) => (
                   <tr
                     key={item.id}
                     className="border-b border-gray-700 hover:bg-gray-700/50 transition"
@@ -225,8 +270,9 @@ export default function SuratKeluar() {
                     colSpan="7"
                     className="py-8 px-6 text-center text-gray-400"
                   >
-                    Tidak ada data surat. Klik tombol "Buat surat baru" untuk
-                    menambah surat.
+                    {searchQuery || filterStatus !== "semua"
+                      ? "Tidak ada data surat yang sesuai dengan pencarian atau filter."
+                      : 'Tidak ada data surat. Klik tombol "Buat surat baru" untuk menambah surat.'}
                   </td>
                 </tr>
               )}
