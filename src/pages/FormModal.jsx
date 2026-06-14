@@ -26,7 +26,7 @@ export default function FormModal({
             layanan: "",
             tanggal: today,
             tempo: "",
-            keterangan: "",
+            status: "",
           }),
   );
 
@@ -44,6 +44,7 @@ export default function FormModal({
       if (!formData.biaya.trim()) newErrors.biaya = "Biaya harus diisi";
     } else {
       if (!formData.tempo.trim()) newErrors.tempo = "Jatuh tempo harus diisi";
+      if (!formData.status.trim()) newErrors.status = "Nominal/Status harus diisi";
     }
 
     return newErrors;
@@ -294,11 +295,10 @@ export default function FormModal({
                     Jatuh Tempo *
                   </label>
                   <input
-                    type="text"
+                    type="date"
                     name="tempo"
                     value={formData.tempo}
                     onChange={handleChange}
-                    placeholder="10 hari"
                     className={`w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border ${
                       errors.tempo ? "border-red-500" : "border-gray-600"
                     } focus:border-red-600 focus:outline-none transition`}
@@ -309,18 +309,27 @@ export default function FormModal({
                 </div>
               </div>
 
-              {/* Keterangan */}
+              {/* Nominal/Status Pembayaran */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Keterangan
+                  Nominal/Status Pembayaran *
                 </label>
-                <textarea
-                  name="keterangan"
-                  value={formData.keterangan}
+                <input
+                  type="text"
+                  name="status"
+                  value={formData.status}
                   onChange={handleChange}
-                  rows="2"
-                  className="w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border border-gray-600 focus:border-red-600 focus:outline-none transition resize-none"
+                  placeholder="Rp 12.500.0 atau kosong jika belum lunas"
+                  className={`w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border ${
+                    errors.status ? "border-red-500" : "border-gray-600"
+                  } focus:border-red-600 focus:outline-none transition`}
                 />
+                {errors.status && (
+                  <p className="text-red-400 text-xs mt-1">{errors.status}</p>
+                )}
+                <p className="text-gray-500 text-xs mt-1">
+                  Isi dengan nominal (Rp) jika sudah lunas, kosongkan jika belum
+                </p>
               </div>
             </>
           )}
