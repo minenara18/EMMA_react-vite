@@ -134,9 +134,13 @@ export default function Invoice() {
         </div>
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
           <p className="text-gray-400 text-sm">Jatuh Tempo</p>
+<<<<<<< HEAD
           <p className="text-3xl font-bold text-yellow-500 mt-2">
             {stats.jatuhTempo}
           </p>
+=======
+          <p className="text-3xl font-bold text-yellow-500 mt-2">{stats.jatuhTempo}</p>
+>>>>>>> 24144ce147604074bd5a87c69fe0bcd3b73b0816
         </div>
       </div>
 

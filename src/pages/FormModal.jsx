@@ -26,7 +26,10 @@ export default function FormModal({
             layanan: "",
             tanggal: today,
             tempo: "",
+<<<<<<< HEAD
             nominal: "",
+=======
+>>>>>>> 24144ce147604074bd5a87c69fe0bcd3b73b0816
             status: "",
           }),
   );
@@ -45,7 +48,11 @@ export default function FormModal({
       if (!formData.biaya.trim()) newErrors.biaya = "Biaya harus diisi";
     } else {
       if (!formData.tempo.trim()) newErrors.tempo = "Jatuh tempo harus diisi";
+<<<<<<< HEAD
       if (!formData.nominal.trim()) newErrors.nominal = "Nominal harus diisi";
+=======
+      if (!formData.status.trim()) newErrors.status = "Nominal/Status harus diisi";
+>>>>>>> 24144ce147604074bd5a87c69fe0bcd3b73b0816
     }
 
     return newErrors;
@@ -310,6 +317,7 @@ export default function FormModal({
                 </div>
               </div>
 
+<<<<<<< HEAD
               {/* Nominal */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -345,7 +353,29 @@ export default function FormModal({
                   onChange={handleChange}
                   placeholder="Opsional - catatan status pembayaran"
                   className="w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border border-gray-600 focus:border-red-600 focus:outline-none transition"
+=======
+              {/* Nominal/Status Pembayaran */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Nominal/Status Pembayaran *
+                </label>
+                <input
+                  type="text"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  placeholder="Rp 12.500.0 atau kosong jika belum lunas"
+                  className={`w-full bg-gray-700 text-gray-100 px-3 py-2 rounded border ${
+                    errors.status ? "border-red-500" : "border-gray-600"
+                  } focus:border-red-600 focus:outline-none transition`}
+>>>>>>> 24144ce147604074bd5a87c69fe0bcd3b73b0816
                 />
+                {errors.status && (
+                  <p className="text-red-400 text-xs mt-1">{errors.status}</p>
+                )}
+                <p className="text-gray-500 text-xs mt-1">
+                  Isi dengan nominal (Rp) jika sudah lunas, kosongkan jika belum
+                </p>
               </div>
             </>
           )}
