@@ -1,0 +1,150 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "email": "admin@emma.com",
+      "password": "admin123",
+      "role": "admin",
+      "createdAt": "2026-01-01T10:00:00Z"
+    }
+  ],
+  "documents": [
+    {
+      "id": 3,
+      "title": "Surat Keputusan 001 - Revisi",
+      "fileName": "SK_001_revisi.pdf",
+      "fileType": "pdf",
+      "fileSize": 0,
+      "category": "general",
+      "uploadedBy": "System",
+      "createdAt": "2026-06-15T14:35:17.875Z",
+      "updatedAt": "2026-06-15T17:34:45.380Z"
+    },
+    {
+      "id": 3,
+      "title": "Surat Keputusan 001",
+      "fileName": "SK_001.pdf",
+      "fileType": "pdf",
+      "fileSize": 0,
+      "category": "general",
+      "uploadedBy": "System",
+      "createdAt": "2026-06-15T17:30:59.293Z",
+      "updatedAt": "2026-06-15T17:30:59.293Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": 1,
+      "invoiceNumber": "INV-2026-001",
+      "customerName": "PT Maju Jaya",
+      "amount": 5000000,
+      "tax": 500000,
+      "discount": 250000,
+      "totalAmount": 5250000,
+      "dueDate": "2026-07-15T00:00:00Z",
+      "description": "Services payment",
+      "items": [
+        {
+          "description": "Consulting Service",
+          "quantity": 10,
+          "price": 500000
+        }
+      ],
+      "status": "pending",
+      "createdAt": "2026-06-15T10:00:00Z",
+      "updatedAt": "2026-06-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "invoiceNumber": "INV-2026-002",
+      "customerName": "PT Sukses Bersama",
+      "amount": 3000000,
+      "tax": 300000,
+      "discount": 100000,
+      "totalAmount": 3200000,
+      "dueDate": "2026-07-20T00:00:00Z",
+      "description": "Product delivery",
+      "items": [],
+      "status": "paid",
+      "createdAt": "2026-06-10T10:00:00Z",
+      "updatedAt": "2026-06-14T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "invoiceNumber": "INV-001",
+      "customerName": "PT Maju Jaya",
+      "amount": 500000,
+      "tax": 0,
+      "discount": 0,
+      "totalAmount": 500000,
+      "dueDate": "2026-07-15",
+      "description": "Pembayaran jasa layanan bulan Juni",
+      "items": [],
+      "status": "pending",
+      "createdAt": "2026-06-15T14:48:22.627Z",
+      "updatedAt": "2026-06-15T14:48:22.627Z"
+    }
+  ],
+  "schedules": [
+    {
+      "id": 1,
+      "serviceName": "Consultation Service",
+      "dayOfWeek": "Monday",
+      "startTime": "09:00",
+      "endTime": "17:00",
+      "location": "Main Office",
+      "capacity": 50,
+      "currentBookings": 35,
+      "description": "Jadwal pelayanan bulan Juli",
+      "status": "reschedule",
+      "createdAt": "2026-01-01T10:00:00Z",
+      "updatedAt": "2026-06-15T14:55:07.612Z"
+    },
+    {
+      "id": 2,
+      "serviceName": "Training Session",
+      "dayOfWeek": "Wednesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "location": "Training Room",
+      "capacity": 30,
+      "currentBookings": 28,
+      "description": "Employee training program",
+      "status": "active",
+      "createdAt": "2026-01-02T10:00:00Z",
+      "updatedAt": "2026-01-02T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "serviceName": "Support Service",
+      "dayOfWeek": "Friday",
+      "startTime": "08:00",
+      "endTime": "18:00",
+      "location": "Support Center",
+      "capacity": 100,
+      "currentBookings": 45,
+      "description": "Customer support service",
+      "status": "active",
+      "createdAt": "2026-01-03T10:00:00Z",
+      "updatedAt": "2026-01-03T10:00:00Z"
+    }
+  ],
+  "outgoingLetters": [
+    {
+      "id": 3,
+      "letterNumber": "SK-OUT-001",
+      "title": "Permohonan Data Siswa",
+      "recipient": "Dinas Pendidikan Kota",
+      "recipientAddress": "",
+      "content": "",
+      "createdBy": "System",
+      "approvedBy": null,
+      "attachments": [],
+      "status": "draft",
+      "sentDate": null,
+      "createdAt": "2026-06-15T15:23:33.879Z",
+      "updatedAt": "2026-06-15T15:23:33.879Z"
+    }
+  ]
+}
